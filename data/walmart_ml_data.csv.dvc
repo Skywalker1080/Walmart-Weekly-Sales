@@ -1,0 +1,5 @@
+outs:
+- md5: b62717c1bd528b05b06126382371b425
+  size: 466055
+  hash: md5
+  path: walmart_ml_data.csv
