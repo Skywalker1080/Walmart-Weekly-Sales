@@ -30,5 +30,3 @@ def save_df_to_csv(output_path: Path, df: pd.DataFrame, index: bool = False, ove
 
     return output_path
 
-def get_data(path: Path):
-    pass
