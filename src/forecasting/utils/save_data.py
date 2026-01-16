@@ -4,7 +4,7 @@ from forecasting.logger.logging import get_logger
 
 logger = get_logger()
 
-def save_df_to_csv(output_path: Path, df: pd.DataFrame, index: bool = False, overwrite: bool = False):
+def save_df_to_csv(output_path: Path, df: pd.DataFrame, index: bool = False, overwrite: bool = True):
     
     if not isinstance(output_path, Path):
         logger.exception("output_path must be of pathlib.Path")
