@@ -5,6 +5,8 @@ import pandas as pd
 from lightgbm import LGBMRegressor
 import pickle
 from typing import Dict, Optional, Union, Type
+import mlflow
+import mlflow.lightgbm
 
 from sklearn.model_selection import train_test_split
 
@@ -24,6 +26,7 @@ class ModelTrainer:
             model: Optional[Union[LGBMRegressor, Type[LGBMRegressor]]] = None,) -> Dict:
         """Load data, split, train and optionally save model. Returns dict with model and metrics."""
         logger.info("Starting Model Trainer")
+
         df = self._get_data(self.data_path)
         X_train, X_test, y_train, y_test = self._split_dataset(df)
 
@@ -34,8 +37,25 @@ class ModelTrainer:
         elif isinstance(model, type):
             model = model(random_state=42)
 
-        trained_model, metrics = self._train(X_train, X_test, y_train, y_test,
-                                             model, save_model_path)
+        mlflow.set_experiment("walmart_weekly_sales_forecasting")
+        with mlflow.start_run(run_name="lightbgm_train"):
+            mlflow.log_param("Best_params", Best_params)
+            mlflow.log_param("test_size", 0.25)
+
+            trained_model, metrics = self._train(X_train, X_test, y_train, y_test,
+                                                model, save_model_path, save_model=False)
+
+            mlflow.log_metrics({
+                "train_mae": metrics["train"]["MAE"],
+                "train_rmse": metrics["train"]["RMSE"],
+                "train_r2": metrics["train"]["R2"],
+                "test_mae": metrics["test"]["MAE"],
+                "test_rmse": metrics["test"]["RMSE"],
+                "test_r2": metrics["test"]["R2"],
+            })
+
+            mlflow.lightgbm.log_model(trained_model)
+
         logger.info("Model training finished")
         return {"model": trained_model, "metrics": metrics}
 

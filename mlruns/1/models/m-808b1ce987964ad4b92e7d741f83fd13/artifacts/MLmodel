@@ -1,0 +1,21 @@
+artifact_path: file:///C:/Projects/Walmart Model/mlruns/1/models/m-808b1ce987964ad4b92e7d741f83fd13/artifacts
+flavors:
+  lightgbm:
+    code: null
+    data: model.pkl
+    lgb_version: 4.6.0
+    model_class: lightgbm.sklearn.LGBMRegressor
+  python_function:
+    data: model.pkl
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.lightgbm
+    python_version: 3.11.13
+mlflow_version: 3.8.1
+model_id: m-808b1ce987964ad4b92e7d741f83fd13
+model_size_bytes: 282503
+model_uuid: m-808b1ce987964ad4b92e7d741f83fd13
+prompts: null
+run_id: be4ea652ad7a4bb7b933976986f6a52e
+utc_time_created: '2026-01-17 07:04:20.061616'

@@ -9,6 +9,8 @@ from forecasting.stages.validation import Validation
 from forecasting.stages.modelling import FeatureMaker
 import matplotlib.pyplot as plt
 from datetime import datetime
+import mlflow
+import numpy as np
 
 
 logger = get_logger()
@@ -27,17 +29,29 @@ class InferencePipeline:
         """Execute full inference pipeline with multi-step forecasting"""
         logger.info(f"Inference: Starting pipeline for {forecast_steps} week forecast")
 
-        df = self.ingestion.run(path=str(data_path))
-        df = self.validation.run(df)
-        df = self.feature_maker.run(df)
+        mlflow.set_experiment("walmart_weekly_sales_forecasting")
+        with mlflow.start_run(run_name="lightbgm_inference"):
+            mlflow.log_param("forecast_steps", forecast_steps)
 
-        predictions = self._predict(df, forecast_steps=forecast_steps)
+            df = self.ingestion.run(path=str(data_path))
+            df = self.validation.run(df)
+            df = self.feature_maker.run(df)
+
+            predictions = self._predict(df, forecast_steps=forecast_steps)
+
+            mlflow.log_metric("prediction_rows", len(predictions))
+            mlflow.log_metrics({
+                "prediction_mean": predictions['predicted_sales'].mean(),
+                "prediction_std": predictions['predicted_sales'].std(),
+            })
         
-        if save_plot:
-            self._plot_predictions(predictions, plot_dir)
+            if save_plot:
+                logger.debug(f"Predictions plot saved to {plot_dir}")
+                self._plot_predictions(predictions, plot_dir)
+                mlflow.log_artifacts(str(plot_dir))
         
-        logger.info("Inference: Pipeline Complete")
-        return predictions
+            logger.info("Inference: Pipeline Complete")
+            return predictions
 
     def _load_model(self):
         """Inference: Loading trained model from disk"""

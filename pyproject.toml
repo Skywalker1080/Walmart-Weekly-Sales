@@ -12,6 +12,7 @@ dependencies = [
     "kagglehub>=0.3.13",
     "lightgbm>=4.6.0",
     "matplotlib>=3.10.8",
+    "mlflow>=3.8.1",
     "nbformat>=4.2.0",
     "numpy>=2.4.0",
     "optuna>=4.6.0",
