@@ -57,7 +57,7 @@ class ModelTrainer:
             mlflow.lightgbm.log_model(trained_model)
 
         logger.info("Model training finished")
-        return {"model": trained_model, "metrics": metrics}
+        return {"metrics": metrics}
 
     def _get_data(self, path: Path):
         

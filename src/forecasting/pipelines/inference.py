@@ -33,7 +33,8 @@ class InferencePipeline:
         with mlflow.start_run(run_name="lightbgm_inference"):
             mlflow.log_param("forecast_steps", forecast_steps)
 
-            df = self.ingestion.run(path=str(data_path))
+            
+            df = self.ingestion.run(file_object=data_path)
             df = self.validation.run(df)
             df = self.feature_maker.run(df)
 
@@ -121,7 +122,9 @@ class InferencePipeline:
             
             
             for store in stores:
-                store_data = predictions[predictions['Store'] == store].copy()
+                store_data = predictions[(predictions['Store'] == store) &
+                (predictions['forecast_step'] == predictions['forecast_step'].max())].copy()
+
                 store_data['Date'] = pd.to_datetime(store_data['Date'])
                 store_data = store_data.sort_values('Date')
                 

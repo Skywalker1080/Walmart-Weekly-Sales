@@ -9,4 +9,4 @@ save_model_path = Path("models/model_trained.pkl")
 
 trainer = ModelTrainer(data_path=data_path)
 
-best_model, metrics = trainer.run(model=LGBMRegressor, save_model_path=save_model_path)
+metrics = trainer.run(model=LGBMRegressor, save_model_path=save_model_path)

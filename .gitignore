@@ -11,3 +11,8 @@ wheels/
 .env
 /logs
 src/forecasting/data
+/results
+/plots
+/data
+/mlruns
+/tests

@@ -11,11 +11,20 @@ class TrainingRequest(BaseModel):
     data_path: str
     model_save_path: str
 
+class MetricValues(BaseModel):
+    MAE: float
+    RMSE: float
+    R2: float
+
+class TrainingMetrics(BaseModel):
+    train: MetricValues
+    test: MetricValues
+
 class TrainingResponse(BaseModel):
     """Schema for training response"""
     status: str
     message: str
-    metrics: Dict[str, Dict]
+    metrics: TrainingMetrics
 
 class PredictionRequest(BaseModel):
     """Schema for prediction request"""
